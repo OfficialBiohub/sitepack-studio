@@ -15,6 +15,11 @@ describe("site crawler URL safeguards", () => {
     expect(isPublicIp("127.0.0.1")).toBe(false);
     expect(isPublicIp("10.0.0.8")).toBe(false);
     expect(isPublicIp("192.168.1.44")).toBe(false);
+    expect(isPublicIp("192.0.0.1")).toBe(false);
+    expect(isPublicIp("192.0.2.1")).toBe(false);
+    expect(isPublicIp("198.51.100.42")).toBe(false);
+    expect(isPublicIp("203.0.113.42")).toBe(false);
+    expect(isPublicIp("192.0.66.96")).toBe(true);
     expect(isPublicIp("8.8.8.8")).toBe(true);
     expect(isPublicIp("::1")).toBe(false);
   });

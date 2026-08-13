@@ -12,3 +12,8 @@
 - [x] Document limitations: authentication, bot protection, robots policies, dynamic runtime data, and legal permissions.
 - [x] Add explicit user-facing wording that robots-policy restrictions can block an archive.
 - [x] Save a delivery checkpoint and provide the project version.
+- [x] Reproduce the false private-network error reported for a valid public URL.
+- [x] Correct IPv4 and IPv6 public-address classification without permitting private or reserved targets.
+- [x] Add regression coverage for public host DNS resolution and blocked private addresses.
+- [x] Validate the archive mutation succeeds for a public URL and rejects a private target.
+- [x] Save a checkpoint containing the validation fix.

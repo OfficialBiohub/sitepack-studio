@@ -60,7 +60,7 @@ function safeHost(hostname: string) {
 function isUnsafeIpv4(address: string) {
   const parts = address.split(".").map(Number);
   if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return true;
-  const [a, b] = parts;
+  const [a, b, c, d] = parts;
   return (
     a === 0 ||
     a === 10 ||
@@ -69,7 +69,14 @@ function isUnsafeIpv4(address: string) {
     (a === 169 && b === 254) ||
     (a === 172 && b >= 16 && b <= 31) ||
     (a === 192 && b === 168) ||
-    (a === 192 && b === 0) ||
+    // 192.0.0.0/24 is special-purpose space. Do not block the broader
+    // 192.0.0.0/16 range: public sites, including www.biohub.org, resolve
+    // to 192.0.66.96 and must remain reachable.
+    (a === 192 && b === 0 && c === 0 && !((d === 9) || (d === 10))) ||
+    (a === 192 && b === 0 && c === 2) ||
+    (a === 192 && b === 88 && c === 99) ||
+    (a === 198 && b === 51 && c === 100) ||
+    (a === 203 && b === 0 && c === 113) ||
     (a === 198 && (b === 18 || b === 19)) ||
     a >= 224
   );
