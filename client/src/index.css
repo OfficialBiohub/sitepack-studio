@@ -123,6 +123,10 @@
   .spin { animation: spin 850ms linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .form-message { display: flex; gap: 8px; align-items: center; margin-top: 16px; color: var(--destructive); font-size: 13px; font-weight: 700; }
+  .permission-note { display: flex; align-items: flex-start; gap: 10px; width: fit-content; max-width: 720px; margin-top: 19px; font-size: 12px; line-height: 1.35; cursor: pointer; }
+  .permission-note input { position: absolute; opacity: 0; pointer-events: none; }
+  .permission-note .toggle-box { flex: 0 0 18px; height: 18px; }
+  .permission-note.is-checked .toggle-box { background: var(--ink); color: var(--yellow); }
   .options-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 25px; padding-top: 39px; margin-top: 38px; border-top: 1px dashed rgba(21,21,21,.6); }
   .options-intro { display: flex; gap: 12px; font-size: 13px; }
   .options-intro strong { display: block; margin-bottom: 4px; }
@@ -140,6 +144,8 @@
   .progress-topline span:first-child { display: flex; align-items: center; gap: 7px; font-family: "Space Grotesk", sans-serif; font-weight: 700; }
   .progress-track { height: 10px; margin: 15px 0 12px; overflow: hidden; border: 1px solid var(--ink); background: rgba(21,21,21,.09); }
   .progress-track span { display: block; height: 100%; background: var(--ink); transition: width 240ms var(--ease-out); }
+  .progress-track .indeterminate { width: 35%; animation: sitepack-progress 1.15s var(--ease-out) infinite alternate; }
+  @keyframes sitepack-progress { from { transform: translateX(-25%); } to { transform: translateX(225%); } }
   .progress-card p { margin: 0; font-size: 12px; color: #6d6c61; }
   .ready-card { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; background: var(--ink); color: var(--paper); }
   .ready-icon { width: 48px; height: 48px; display: grid; place-items: center; background: var(--yellow); color: var(--ink); border-radius: 50%; }
