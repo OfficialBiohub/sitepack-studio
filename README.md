@@ -10,7 +10,7 @@ Install dependencies with `pnpm install --frozen-lockfile`, start the developmen
 
 ## Render deployment
 
-The included `render.yaml` creates a Node web service called `SitepackStudio`. Configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_WEBHOOK_SECRET` as Render environment variables; never commit them to GitHub. On Render, ZIPs use an expiring in-memory download route when Manus-managed object storage is not available, so users should download a generated archive within 15 minutes.
+The included `render.yaml` creates a Node web service called `SitepackStudio`. Configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_WEBHOOK_SECRET` as Render environment variables; never commit them to GitHub. Set `PUBLIC_APP_URL` to the deployed HTTPS address so Telegram replies send visitors to the correct site. On Render, ZIPs use an expiring in-memory download route when Manus-managed object storage is not available, so users should download a generated archive within 15 minutes.
 
 ## Safety and scope
 

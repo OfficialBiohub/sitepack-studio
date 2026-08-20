@@ -9,4 +9,5 @@ export const ENV = {
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN ?? "",
   telegramWebhookSecret: process.env.TELEGRAM_WEBHOOK_SECRET ?? "",
+  publicAppUrl: (process.env.PUBLIC_APP_URL ?? "https://sitepack-ctwq4q6d.manus.space").replace(/\/+$/, ""),
 };

@@ -3,7 +3,7 @@ import type { Express, Request } from "express";
 import { ENV } from "./_core/env";
 import { sendTelegramMessage, type TelegramWebhookUpdate } from "./services/telegram";
 
-const STUDIO_URL = "https://sitepack-ctwq4q6d.manus.space";
+const STUDIO_URL = ENV.publicAppUrl;
 
 export function hasValidWebhookSecret(supplied: string, expected = ENV.telegramWebhookSecret) {
   if (!expected || supplied.length !== expected.length) return false;
