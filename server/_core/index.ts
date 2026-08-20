@@ -9,6 +9,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { registerTelegramWebhook } from "../telegramWebhook";
+import { registerArchiveDownloadRoutes } from "../archiveDownloads";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -38,6 +39,7 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   registerTelegramWebhook(app);
+  registerArchiveDownloadRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",
