@@ -9,5 +9,5 @@
 - [x] Inspect the connected GitHub and Render integration state before publishing externally.
 - [x] Prepare the project for a public GitHub repository without exposing credentials or generated archives.
 - [x] Extend authorized source-package documentation and coverage without claiming access to private third-party backend code.
-- [ ] Create or update a Render deployment named SitepackStudio with the required environment variables.
-- [ ] Verify the public repository and Render deployment.
+- [x] Create and update a Render deployment named SitepackStudio with the required environment variables.
+- [x] Verify the public repository, Render deployment, expiring ZIP download, and Telegram webhook.
