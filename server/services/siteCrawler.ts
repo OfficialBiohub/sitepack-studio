@@ -339,7 +339,9 @@ export class SiteArchiveBuilder {
   }
 
   private rewriteJavaScript(code: string, baseUrl: URL, parentPath: string) {
-    const replaceReference = (raw: string) => this.registerAsset(raw, baseUrl, parentPath);
+    const replaceReference = (raw: string) => /^(?:[./]|https?:\/\/)/i.test(raw.trim())
+      ? this.registerAsset(raw, baseUrl, parentPath)
+      : raw;
     return code
       .replace(/((?:import|export)\s+(?:[^'";]*?\s+from\s+)?["'])([^"']+)(["'])/g, (_match, prefix: string, raw: string, suffix: string) => `${prefix}${replaceReference(raw)}${suffix}`)
       .replace(/(import\(\s*["'])([^"']+)(["']\s*\))/g, (_match, prefix: string, raw: string, suffix: string) => `${prefix}${replaceReference(raw)}${suffix}`)
@@ -408,6 +410,11 @@ export class SiteArchiveBuilder {
         const src = script.attr("src");
         if (src) script.attr("src", this.registerAsset(src, finalUrl, pagePath));
       });
+      $("script:not([src])").each((_index, element) => {
+        const script = $(element);
+        const contents = script.html();
+        if (contents) script.text(this.rewriteJavaScript(contents, finalUrl, pagePath));
+      });
       $("img[src], source[src], video[src], audio[src], track[src], embed[src], iframe[src], input[src]").each((_index, element) => {
         const node = $(element);
         const src = node.attr("src");
@@ -423,6 +430,16 @@ export class SiteArchiveBuilder {
         const node = $(element);
         const srcset = node.attr("srcset");
         if (srcset) node.attr("srcset", this.rewriteSrcset(srcset, finalUrl, pagePath));
+      });
+      $("link[imagesrcset]").each((_index, element) => {
+        const link = $(element);
+        const srcset = link.attr("imagesrcset");
+        if (srcset) link.attr("imagesrcset", this.rewriteSrcset(srcset, finalUrl, pagePath));
+      });
+      $("meta[property='og:image'][content], meta[name='twitter:image'][content], meta[itemprop='image'][content]").each((_index, element) => {
+        const meta = $(element);
+        const content = meta.attr("content");
+        if (content) meta.attr("content", this.registerAsset(content, finalUrl, pagePath));
       });
       $("[style]").each((_index, element) => {
         const node = $(element);
@@ -473,18 +490,19 @@ export class SiteArchiveBuilder {
       limitations: [
         "Only public files accessible without authentication, session cookies, CAPTCHA, or paywall are included.",
         "An archive can be blocked when the target website's robots policy disallows the requested path.",
-        "The archive contains HTML and publicly referenced frontend resources. Server APIs, databases, and personalized content are not copied.",
-        "JavaScript-driven runtime requests that are not statically referenced may need manual capture.",
+        "The archive contains public HTML and statically referenced frontend resources. Backend source, server APIs, databases, secrets, and personalized content cannot be retrieved from a public website.",
+        "JavaScript-driven runtime requests and assets not statically referenced in the downloaded files may need manual capture.",
       ],
     };
     this.zip.file("sitepack-manifest.json", JSON.stringify(manifest, null, 2));
-    this.zip.file("README.txt", `SITEPACK STUDIO\n\nOpen index.html in a browser.\nSource: ${this.source}\n\nThis package is for pages you are authorized to archive.\n`);
+    this.zip.file("README.txt", `SITEPACK STUDIO\n\nOpen index.html in a browser.\nSource: ${this.source}\n\nThe archive includes public frontend source files that were statically referenced: HTML, CSS, JavaScript, fonts, images, media, and other downloadable assets.\n\nThis package is for pages you are authorized to archive.\n`);
+    this.zip.file("BACKEND-SOURCE-NOT-AVAILABLE.md", `# Backend source availability\n\nSitePack Studio can package the public frontend files exposed by a website. A public URL does not expose the website's private server repository, application source, database schema, API credentials, environment variables, authentication sessions, or hosting configuration.\n\nIf you own the website, obtain those files from its repository, hosting provider, backups, or deployment artifact instead.\n`);
     const buffer = await this.zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE", compressionOptions: { level: 6 } });
     return {
       buffer,
       entryPath: "index.html",
       skipped: this.skipped,
-      summary: { fileCount: this.fileCount + 2, pageCount: this.pages.size, assetCount: this.assets.size, skippedCount: this.skipped.length, byteLength: buffer.byteLength },
+      summary: { fileCount: this.fileCount + 3, pageCount: this.pages.size, assetCount: this.assets.size, skippedCount: this.skipped.length, byteLength: buffer.byteLength },
     };
   }
 }
