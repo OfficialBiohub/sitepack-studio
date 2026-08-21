@@ -24,3 +24,6 @@
 - [x] Verify the restored branding and images locally and on Render.
 - [x] Confirm the live Render hero background image and paper texture asset URLs respond successfully.
 - [x] Confirm the live Render application logo and PWA icon assets respond successfully.
+- [x] Diagnose the Vite HMR WebSocket failure in the managed development preview.
+- [x] Configure HMR routing compatible with the managed preview domain.
+- [x] Restart and verify the development preview reconnects without WebSocket errors.
