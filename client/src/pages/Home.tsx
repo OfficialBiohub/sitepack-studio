@@ -9,7 +9,6 @@ import {
   FileArchive,
   Globe2,
   LoaderCircle,
-  Menu,
   MoveRight,
   PackageCheck,
   Settings2,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { SitePage } from "@/components/SiteChrome";
 import { trpc } from "@/lib/trpc";
 
 type JobState = "idle" | "preparing" | "ready" | "error";
@@ -29,12 +29,9 @@ type DownloadOptions = {
   preserveStructure: boolean;
 };
 
-const BOT_URL = "https://t.me/SitepackStudiobot";
 const ASSET_URLS = {
-  mark: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-mark_1c0eaa50.png",
   hero: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-reference-hero-collage.webp",
   stamps: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-file-stamps_00b5f49e.jpg",
-  paper: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-paper-texture_3b110ccb.jpg",
 };
 
 type InstallPromptEvent = Event & {
@@ -71,15 +68,6 @@ function normalizeUrl(value: string) {
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
 
-function BrandMark() {
-  return (
-    <div className="brand-lockup" aria-label="SitePack Studio">
-      <span className="brand-mark-frame"><img src={ASSET_URLS.mark} alt="" /></span>
-      <span className="brand-wordmark">sitepack<span>studio</span></span>
-    </div>
-  );
-}
-
 function OptionToggle({ checked, label, detail, onChange }: { checked: boolean; label: string; detail: string; onChange: () => void }) {
   return (
     <label className={`option-toggle ${checked ? "is-checked" : ""}`}>
@@ -97,9 +85,6 @@ export default function Home() {
   const [result, setResult] = useState<{ downloadUrl: string; archiveName: string; fileCount: number; pageCount: number; assetCount: number; skippedCount: number; byteLength: number; skipped: Array<{ url: string; reason: string }> } | null>(null);
   const [options, setOptions] = useState(initialOptions);
   const [hasPermission, setHasPermission] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [creatorMenuOpen, setCreatorMenuOpen] = useState(false);
-  const [language, setLanguage] = useState("EN");
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
 
   const packMutation = trpc.packer.create.useMutation();
@@ -151,11 +136,7 @@ export default function Home() {
   function resetJob() { setResult(null); setJobState("idle"); setErrorMessage(""); }
 
   return (
-    <main className="site-shell" style={{ "--paper-image": `url(${ASSET_URLS.paper})` } as React.CSSProperties}>
-      <header className="topbar">
-        <BrandMark />
-        <div className="topbar-meta"><span className="edition-label">WEB UTILITY / 002</span><div className="language-wrap"><button className="language-button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-haspopup="listbox">{language} <ChevronDown size={14} /></button>{menuOpen ? <div className="language-menu" role="listbox">{["EN", "ES", "RU"].map((item) => <button key={item} role="option" aria-selected={language === item} onClick={() => { setLanguage(item); setMenuOpen(false); }}>{item}</button>)}</div> : null}</div><div className="site-menu-wrap"><button className="menu-button" aria-label="Open creator contact menu" onClick={() => setCreatorMenuOpen((open) => !open)} aria-expanded={creatorMenuOpen} aria-haspopup="menu"><Menu size={18} /></button>{creatorMenuOpen ? <div className="creator-menu" role="menu"><span className="creator-menu-label">CREATOR CONTACT</span><a href="https://www.facebook.com/SitepackStudio" target="_blank" rel="noreferrer" role="menuitem">Facebook <ArrowUpRight size={13} /></a><a href={BOT_URL} target="_blank" rel="noreferrer" role="menuitem">@SitepackStudiobot <ArrowUpRight size={13} /></a><button type="button" role="menuitem" onClick={() => { void installApp(); setCreatorMenuOpen(false); }}>Install app <ArrowDownToLine size={13} /></button></div> : null}</div></div>
-      </header>
+    <SitePage onInstall={installApp}>
 
       <section className="hero-section" style={{ "--hero-image": `url(${ASSET_URLS.hero})` } as React.CSSProperties}>
         <div className="index-mark mark-one">01</div>
@@ -181,7 +162,6 @@ export default function Home() {
 
       <section className="explain-section"><div className="index-mark mark-three">03</div><div className="explain-grid"><div className="explain-copy"><p className="section-kicker">WHAT GOES IN THE BOX</p><h2>All the useful<br /><em>pieces.</em></h2><p>SitePack follows public static references from a page, including stylesheets, module imports, import maps, fonts, images, media, social images, and manifest files. Each ZIP includes a source index with captured public URLs, local paths, types, and sizes. A public address cannot reveal private backend code, databases, API secrets, logins, paywalled content, or CAPTCHA-protected pages.</p><a className="inline-link" href="#pack">Start with a URL <ArrowUpRight size={16} /></a></div><div className="stamp-image-wrap"><img src={ASSET_URLS.stamps} alt="Editorial illustration of web file types" /><div className="image-caption">THE SMALL PARTS<br />THAT MAKE A PAGE.</div></div></div><div className="file-type-row">{fileTypes.map((file) => <div className={`file-type file-type-${file.tone}`} key={file.label}><span className="file-index">{file.value}</span><span className="file-icon"><FileArchive size={20} /></span><div><strong>{file.label}</strong><small>{file.detail}</small></div></div>)}</div></section>
 
-      <footer className="footer"><div className="footer-brand"><BrandMark /><span className="footer-rule" /> <span>Small tool. Clear output.</span></div><div className="footer-links"><a href="#pack">Pack a page</a><button type="button" className="footer-install" onClick={() => void installApp()}>Install app <ArrowDownToLine size={13} /></button><a href="https://www.facebook.com/SitepackStudio" target="_blank" rel="noreferrer">Creator Facebook <ArrowUpRight size={13} /></a><a href={BOT_URL} target="_blank" rel="noreferrer">@SitepackStudiobot <ArrowUpRight size={13} /></a><span>© 2026 SitePack Studio</span></div></footer>
-    </main>
+    </SitePage>
   );
 }
