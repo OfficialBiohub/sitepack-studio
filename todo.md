@@ -20,3 +20,4 @@
 - [x] Replace the four asset cards with the requested six archive categories.
 - [x] Label categories as HTML, CSS, JavaScript, media/images, fonts, and other assets.
 - [x] Verify responsive display of the six-category row and save a checkpoint.
+- [x] Confirmed after merge that desktop shows six categories and mobile presents three readable two-card rows.
