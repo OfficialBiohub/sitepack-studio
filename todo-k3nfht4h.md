@@ -7,4 +7,4 @@
 - [x] Add and run automated tests covering the primary routes and navigation labels.
 - [x] Verify the rendered pages on desktop and mobile viewports.
 - [x] Diagnose and correct the blank-page rendering issue seen during desktop route verification.
-- [ ] Create a published checkpoint for the completed website update.
+- [x] Create a published checkpoint for the completed website update.
