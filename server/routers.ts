@@ -6,6 +6,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { buildPublicSiteArchive, SiteCrawlerError } from "./services/siteCrawler";
 import { storagePut } from "./storage";
+import { createEphemeralArchiveDownload } from "./archiveDownloads";
 
 export const appRouter = router({
   system: systemRouter,
@@ -35,14 +36,21 @@ export const appRouter = router({
           const hostname = new URL(input.url.includes("://") ? input.url : `https://${input.url}`).hostname
             .replace(/^www\./, "")
             .replace(/[^a-z0-9.-]/gi, "-");
-          const { url } = await storagePut(
-            `sitepack-archives/${hostname}-${Date.now()}.zip`,
-            archive.buffer,
-            "application/zip",
-          );
+          const archiveName = `${hostname || "website"}-sitepack.zip`;
+          let downloadUrl: string;
+          try {
+            ({ url: downloadUrl } = await storagePut(
+              `sitepack-archives/${hostname}-${Date.now()}.zip`,
+              archive.buffer,
+              "application/zip",
+            ));
+          } catch (storageError) {
+            console.warn("[Archive] Managed object storage is unavailable; using a 15-minute server download.", storageError instanceof Error ? storageError.message : storageError);
+            ({ downloadUrl } = createEphemeralArchiveDownload(archive.buffer, archiveName));
+          }
           return {
-            downloadUrl: url,
-            archiveName: `${hostname || "website"}-sitepack.zip`,
+            downloadUrl,
+            archiveName,
             ...archive.summary,
             skipped: archive.skipped.slice(0, 12),
           };

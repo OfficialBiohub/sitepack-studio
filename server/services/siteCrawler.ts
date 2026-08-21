@@ -22,6 +22,9 @@ type RecordedResource = {
   url: string;
   localPath: string;
   task?: Promise<void>;
+  contentType?: string;
+  byteLength?: number;
+  status?: "included" | "skipped";
 };
 
 export type ArchiveSummary = {
@@ -253,6 +256,7 @@ export class SiteArchiveBuilder {
     this.totalBytes += byteLength;
     this.fileCount += 1;
     this.zip.file(localPath, content);
+    return byteLength;
   }
 
   private assetPath(url: URL, contentType = "") {
@@ -339,11 +343,26 @@ export class SiteArchiveBuilder {
   }
 
   private rewriteJavaScript(code: string, baseUrl: URL, parentPath: string) {
-    const replaceReference = (raw: string) => this.registerAsset(raw, baseUrl, parentPath);
+    const replaceReference = (raw: string) => /^(?:[./]|https?:\/\/)/i.test(raw.trim())
+      ? this.registerAsset(raw, baseUrl, parentPath)
+      : raw;
     return code
       .replace(/((?:import|export)\s+(?:[^'";]*?\s+from\s+)?["'])([^"']+)(["'])/g, (_match, prefix: string, raw: string, suffix: string) => `${prefix}${replaceReference(raw)}${suffix}`)
       .replace(/(import\(\s*["'])([^"']+)(["']\s*\))/g, (_match, prefix: string, raw: string, suffix: string) => `${prefix}${replaceReference(raw)}${suffix}`)
       .replace(/(new\s+URL\(\s*["'])([^"']+)(["']\s*,\s*import\.meta\.url\s*\))/g, (_match, prefix: string, raw: string, suffix: string) => `${prefix}${replaceReference(raw)}${suffix}`);
+  }
+
+  private rewriteImportMap(contents: string, baseUrl: URL, parentPath: string) {
+    try {
+      const importMap = JSON.parse(contents) as { imports?: Record<string, string>; scopes?: Record<string, Record<string, string>> };
+      const rewriteEntries = (entries: Record<string, string> | undefined) => entries
+        ? Object.fromEntries(Object.entries(entries).map(([specifier, target]) => [specifier, typeof target === "string" && /^(?:[./]|https?:\/\/)/i.test(target.trim()) ? this.registerAsset(target, baseUrl, parentPath) : target]))
+        : undefined;
+      return JSON.stringify({ ...importMap, imports: rewriteEntries(importMap.imports), scopes: importMap.scopes ? Object.fromEntries(Object.entries(importMap.scopes).map(([scope, entries]) => [scope, rewriteEntries(entries)])) : undefined }, null, 2);
+    } catch {
+      this.registerSkipped(baseUrl.toString(), "Could not parse an inline import map");
+      return contents;
+    }
   }
 
   private rewriteSrcset(srcset: string, baseUrl: URL, parentPath: string) {
@@ -371,18 +390,21 @@ export class SiteArchiveBuilder {
       const finalPath = resource.localPath;
 
       if (isCss) {
-        this.addFile(finalPath, this.rewriteCss(bytes.toString("utf8"), finalUrl, finalPath));
+        resource.byteLength = this.addFile(finalPath, this.rewriteCss(bytes.toString("utf8"), finalUrl, finalPath));
       } else if (isJavaScript) {
         const script = this.rewriteJavaScript(bytes.toString("utf8"), finalUrl, finalPath);
         const scriptWithSourceMap = this.options.includeSourceMaps
           ? script.replace(/(\/\/[#@]\s*sourceMappingURL=)([^\s]+)/g, (_match, prefix: string, raw: string) => `${prefix}${this.registerAsset(raw, finalUrl, finalPath)}`)
           : script;
-        this.addFile(finalPath, scriptWithSourceMap);
+        resource.byteLength = this.addFile(finalPath, scriptWithSourceMap);
       } else {
-        this.addFile(finalPath, bytes);
+        resource.byteLength = this.addFile(finalPath, bytes);
       }
+      resource.contentType = contentType;
+      resource.status = "included";
     } catch (error) {
       this.registerSkipped(resource.url, error instanceof Error ? error.message : "Asset download failed");
+      resource.status = "skipped";
     }
   }
 
@@ -408,6 +430,11 @@ export class SiteArchiveBuilder {
         const src = script.attr("src");
         if (src) script.attr("src", this.registerAsset(src, finalUrl, pagePath));
       });
+      $("script:not([src])").each((_index, element) => {
+        const script = $(element);
+        const contents = script.html();
+        if (contents) script.text((script.attr("type") ?? "").toLowerCase() === "importmap" ? this.rewriteImportMap(contents, finalUrl, pagePath) : this.rewriteJavaScript(contents, finalUrl, pagePath));
+      });
       $("img[src], source[src], video[src], audio[src], track[src], embed[src], iframe[src], input[src]").each((_index, element) => {
         const node = $(element);
         const src = node.attr("src");
@@ -423,6 +450,16 @@ export class SiteArchiveBuilder {
         const node = $(element);
         const srcset = node.attr("srcset");
         if (srcset) node.attr("srcset", this.rewriteSrcset(srcset, finalUrl, pagePath));
+      });
+      $("link[imagesrcset]").each((_index, element) => {
+        const link = $(element);
+        const srcset = link.attr("imagesrcset");
+        if (srcset) link.attr("imagesrcset", this.rewriteSrcset(srcset, finalUrl, pagePath));
+      });
+      $("meta[property='og:image'][content], meta[name='twitter:image'][content], meta[itemprop='image'][content]").each((_index, element) => {
+        const meta = $(element);
+        const content = meta.attr("content");
+        if (content) meta.attr("content", this.registerAsset(content, finalUrl, pagePath));
       });
       $("[style]").each((_index, element) => {
         const node = $(element);
@@ -440,9 +477,12 @@ export class SiteArchiveBuilder {
       });
 
       $("head").append(`<meta name="sitepack-source" content="${finalUrl.toString().replace(/&/g, "&amp;").replace(/\"/g, "&quot;")}">`);
-      this.addFile(pagePath, $.html());
+      resource.byteLength = this.addFile(pagePath, $.html());
+      resource.contentType = contentType;
+      resource.status = "included";
     } catch (error) {
       this.registerSkipped(resource.url, error instanceof Error ? error.message : "Page download failed");
+      resource.status = "skipped";
     }
   }
 
@@ -473,18 +513,20 @@ export class SiteArchiveBuilder {
       limitations: [
         "Only public files accessible without authentication, session cookies, CAPTCHA, or paywall are included.",
         "An archive can be blocked when the target website's robots policy disallows the requested path.",
-        "The archive contains HTML and publicly referenced frontend resources. Server APIs, databases, and personalized content are not copied.",
-        "JavaScript-driven runtime requests that are not statically referenced may need manual capture.",
+        "The archive contains public HTML and statically referenced frontend resources. Backend source, server APIs, databases, secrets, and personalized content cannot be retrieved from a public website.",
+        "JavaScript-driven runtime requests and assets not statically referenced in the downloaded files may need manual capture.",
       ],
     };
     this.zip.file("sitepack-manifest.json", JSON.stringify(manifest, null, 2));
-    this.zip.file("README.txt", `SITEPACK STUDIO\n\nOpen index.html in a browser.\nSource: ${this.source}\n\nThis package is for pages you are authorized to archive.\n`);
+    this.zip.file("sitepack-source-index.json", JSON.stringify({ generatedAt: manifest.generatedAt, source: manifest.source, pages: Array.from(this.pages.values()).map(({ url, localPath, contentType, byteLength, status }) => ({ url, localPath, contentType: contentType ?? "text/html", byteLength: byteLength ?? 0, status: status ?? "skipped" })), resources: Array.from(this.assets.values()).map(({ url, localPath, contentType, byteLength, status }) => ({ url, localPath, contentType: contentType ?? "unknown", byteLength: byteLength ?? 0, status: status ?? "skipped" })) }, null, 2));
+    this.zip.file("README.txt", `SITEPACK STUDIO\n\nOpen index.html in a browser.\nSource: ${this.source}\n\nThe archive includes public frontend source files that were statically referenced: HTML, CSS, JavaScript modules, import maps, fonts, images, media, manifests, and other downloadable assets. Review sitepack-source-index.json for captured URLs, paths, types, sizes, and skips.\n\nThis package is for pages you are authorized to archive.\n`);
+    this.zip.file("BACKEND-SOURCE-NOT-AVAILABLE.md", `# Backend source availability\n\nSitePack Studio can package the public frontend files exposed by a website. A public URL does not expose the website's private server repository, application source, database schema, API credentials, environment variables, authentication sessions, or hosting configuration.\n\nIf you own the website, obtain those files from its repository, hosting provider, backups, or deployment artifact instead.\n`);
     const buffer = await this.zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE", compressionOptions: { level: 6 } });
     return {
       buffer,
       entryPath: "index.html",
       skipped: this.skipped,
-      summary: { fileCount: this.fileCount + 2, pageCount: this.pages.size, assetCount: this.assets.size, skippedCount: this.skipped.length, byteLength: buffer.byteLength },
+      summary: { fileCount: this.fileCount + 4, pageCount: this.pages.size, assetCount: this.assets.size, skippedCount: this.skipped.length, byteLength: buffer.byteLength },
     };
   }
 }
