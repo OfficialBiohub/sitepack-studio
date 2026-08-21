@@ -6,3 +6,9 @@
 - [x] Verify typecheck, production build, preview rendering, and browser console state.
 - [x] Save a checkpoint containing the preview reliability fix.
 - [x] Confirmed a fresh preview load renders the restored homepage without the TooltipProvider hook failure.
+- [x] Identify every remaining client import path that can mount TooltipProvider.
+- [x] Ensure the development server does not serve stale optimized React or Radix modules.
+- [x] Configure reliable Vite HMR behavior through the managed preview proxy.
+- [x] Validate the standard preview URL without cache-busting query parameters.
+- [x] Confirmed that the standard preview URL renders the live homepage after the cache reset, despite a stale restart capture showing the prior error panel.
+- [x] Save a checkpoint with the persistent preview-error repair.

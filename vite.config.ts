@@ -227,6 +227,14 @@ export default defineConfig({
     port: 3000,
     strictPort: false, // Will find next available port if 3000 is busy
     host: true,
+    // The managed preview terminates TLS in front of Vite. Explicit public
+    // client settings prevent the HMR client from attempting a closed local
+    // socket after a restored project or dependency-cache refresh.
+    hmr: {
+      protocol: "wss",
+      clientPort: 443,
+      timeout: 30_000,
+    },
     allowedHosts: [
       ".manuspre.computer",
       ".manus.computer",

@@ -8,5 +8,7 @@ describe("Vite React runtime configuration", () => {
     const source = fs.readFileSync(configPath, "utf8");
 
     expect(source).toContain('dedupe: ["react", "react-dom"]');
+    expect(source).toContain('protocol: "wss"');
+    expect(source).toContain("clientPort: 443");
   });
 });
