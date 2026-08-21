@@ -17,3 +17,6 @@
 - [x] Add regression coverage for public host DNS resolution and blocked private addresses.
 - [x] Validate the archive mutation succeeds for a public URL and rejects a private target.
 - [x] Save a checkpoint containing the validation fix.
+- [x] Replace the four asset cards with the requested six archive categories.
+- [x] Label categories as HTML, CSS, JavaScript, media/images, fonts, and other assets.
+- [x] Verify responsive display of the six-category row and save a checkpoint.

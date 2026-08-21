@@ -46,8 +46,10 @@ const initialOptions: DownloadOptions = {
 const fileTypes = [
   { label: "HTML", value: "01", detail: "page structure", tone: "yellow" },
   { label: "CSS", value: "02", detail: "visual rules", tone: "paper" },
-  { label: "MEDIA", value: "03", detail: "linked imagery", tone: "olive" },
-  { label: "FONTS", value: "04", detail: "type assets", tone: "clay" },
+  { label: "JAVASCRIPT", value: "03", detail: "interactive logic", tone: "clay" },
+  { label: "MEDIA / IMAGES", value: "04", detail: "visual & audio files", tone: "olive" },
+  { label: "FONTS", value: "05", detail: "type files", tone: "paper" },
+  { label: "OTHER ASSETS", value: "06", detail: "icons, maps & manifests", tone: "yellow" },
 ];
 
 function isValidWebUrl(value: string) {
