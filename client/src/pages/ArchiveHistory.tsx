@@ -1,6 +1,7 @@
 import { ArrowUpRight, FileCode2, FileImage, FileText, ShieldAlert } from "lucide-react";
 import type { CSSProperties } from "react";
-import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { PAPER_TEXTURE_URL } from "@/lib/siteAssets";
 
 const recordItems = [
   { number: "01", icon: FileCode2, title: "Page structure", copy: "Captured public HTML and the local relationships needed to inspect it offline." },

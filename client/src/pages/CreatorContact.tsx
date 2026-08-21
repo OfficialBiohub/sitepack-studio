@@ -1,6 +1,7 @@
 import { ArrowUpRight, MessageCircle, ShieldCheck } from "lucide-react";
 import type { CSSProperties } from "react";
-import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { PAPER_TEXTURE_URL } from "@/lib/siteAssets";
 
 const contacts = [
   { label: "Facebook", detail: "SitePack Studio", href: "https://www.facebook.com/SitepackStudio", icon: MessageCircle },

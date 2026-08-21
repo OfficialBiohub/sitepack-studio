@@ -1,11 +1,10 @@
 import { ArrowDownToLine, ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { siteNavigation } from "@/lib/siteNavigation";
+import { PAPER_TEXTURE_URL } from "@/lib/siteAssets";
 
 const BOT_URL = "https://t.me/SitepackStudiobot";
 const MARK_URL = "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-mark_1c0eaa50.png";
-
-export const PAPER_TEXTURE_URL = "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-paper-texture_3b110ccb.jpg";
 
 export function BrandMark() {
   return (

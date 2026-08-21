@@ -16,7 +16,8 @@ import {
 import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { PAPER_TEXTURE_URL } from "@/lib/siteAssets";
+import { SiteChrome, SiteFooter } from "@/components/SiteChrome";
 
 type JobState = "idle" | "preparing" | "ready" | "error";
 

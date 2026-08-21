@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUpRight, FileArchive, Globe2, SlidersHorizontal } from "lucide-react";
 import type { CSSProperties } from "react";
-import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { SiteChrome, SiteFooter } from "@/components/SiteChrome";
+import { PAPER_TEXTURE_URL } from "@/lib/siteAssets";
 
 const steps = [
   {
