@@ -18,3 +18,7 @@
 - [x] Test the updated image handling, PWA assets, bot configuration, and archive behavior locally and on Render.
 - [x] Deploy the latest image, PWA, bot-link, and archive updates to Render and verify the live website has no broken images.
 - [x] Re-run live Render checks for PWA files, the configured Telegram bot link, and the source-indexed archive output.
+- [x] Locate the original SitePack Studio logo and illustration assets from the prior design.
+- [x] Make Render-safe copies of the original visual assets.
+- [x] Restore the original logo, hero illustration, and supporting artwork in the interface.
+- [ ] Verify the restored branding and images locally and on Render.

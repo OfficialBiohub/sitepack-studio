@@ -19,4 +19,16 @@ describe("SitePack Studio PWA assets", () => {
     expect(worker).toContain("url.pathname.startsWith(\"/api/\")");
     expect(worker).toContain("/offline.html");
   });
+
+  it("uses a reachable image for the configured SitePack Studio logo", async () => {
+    const logoUrl = process.env.VITE_APP_LOGO;
+    expect(logoUrl).toMatch(/^https:\/\//);
+
+    const response = await fetch(logoUrl!);
+    expect(response.ok).toBe(true);
+    const header = new Uint8Array(await response.arrayBuffer()).slice(0, 12);
+    const isPng = Array.from(header.slice(0, 8)).every((byte, index) => byte === [137, 80, 78, 71, 13, 10, 26, 10][index]);
+    const isWebp = new TextDecoder().decode(header.slice(0, 4)) === "RIFF" && new TextDecoder().decode(header.slice(8, 12)) === "WEBP";
+    expect(isPng || isWebp).toBe(true);
+  });
 });

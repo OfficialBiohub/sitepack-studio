@@ -1,17 +1,13 @@
 /* Design direction: Paper Utility — asymmetrical editorial layout, ink rules, highlighter-yellow action states, and compact utility details. */
 import {
-  Archive,
   ArrowDownToLine,
   ArrowUpRight,
-  Boxes,
   Check,
   ChevronDown,
   CircleAlert,
   CircleCheck,
-  Code2,
   FileArchive,
   Globe2,
-  Layers3,
   LoaderCircle,
   Menu,
   MoveRight,
@@ -34,6 +30,12 @@ type DownloadOptions = {
 };
 
 const BOT_URL = "https://t.me/SitepackStudiobot";
+const ASSET_URLS = {
+  mark: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-mark_1c0eaa50.png",
+  hero: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-reference-hero-collage.webp",
+  stamps: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-file-stamps_00b5f49e.jpg",
+  paper: "https://github.com/OfficialBiohub/sitepack-studio/releases/download/sitepack-original-design-assets/sitepack-paper-texture_3b110ccb.jpg",
+};
 
 type InstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -72,18 +74,10 @@ function normalizeUrl(value: string) {
 function BrandMark() {
   return (
     <div className="brand-lockup" aria-label="SitePack Studio">
-      <span className="brand-mark-frame"><Archive size={24} strokeWidth={2.1} aria-hidden="true" /></span>
+      <span className="brand-mark-frame"><img src={ASSET_URLS.mark} alt="" /></span>
       <span className="brand-wordmark">sitepack<span>studio</span></span>
     </div>
   );
-}
-
-function HeroArtwork() {
-  return <div className="hero-art" aria-hidden="true"><div className="hero-browser"><div className="browser-dots"><i /><i /><i /></div><div className="browser-page"><div className="browser-preview"><Layers3 size={50} /><span /></div><div className="browser-lines"><i /><i /><i /></div></div></div><div className="hero-archive"><Archive size={70} /><span>PUBLIC<br />FILES</span></div></div>;
-}
-
-function SourceArtwork() {
-  return <div className="source-art" aria-hidden="true"><div className="source-art-card source-art-code"><Code2 size={59} /><span>HTML · CSS · JS</span></div><div className="source-art-card source-art-pack"><Boxes size={62} /><span>OFFLINE ZIP</span></div><div className="source-art-route">→</div></div>;
 }
 
 function OptionToggle({ checked, label, detail, onChange }: { checked: boolean; label: string; detail: string; onChange: () => void }) {
@@ -157,15 +151,14 @@ export default function Home() {
   function resetJob() { setResult(null); setJobState("idle"); setErrorMessage(""); }
 
   return (
-    <main className="site-shell">
+    <main className="site-shell" style={{ "--paper-image": `url(${ASSET_URLS.paper})` } as React.CSSProperties}>
       <header className="topbar">
         <BrandMark />
         <div className="topbar-meta"><span className="edition-label">WEB UTILITY / 002</span><div className="language-wrap"><button className="language-button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-haspopup="listbox">{language} <ChevronDown size={14} /></button>{menuOpen ? <div className="language-menu" role="listbox">{["EN", "ES", "RU"].map((item) => <button key={item} role="option" aria-selected={language === item} onClick={() => { setLanguage(item); setMenuOpen(false); }}>{item}</button>)}</div> : null}</div><div className="site-menu-wrap"><button className="menu-button" aria-label="Open creator contact menu" onClick={() => setCreatorMenuOpen((open) => !open)} aria-expanded={creatorMenuOpen} aria-haspopup="menu"><Menu size={18} /></button>{creatorMenuOpen ? <div className="creator-menu" role="menu"><span className="creator-menu-label">CREATOR CONTACT</span><a href="https://www.facebook.com/SitepackStudio" target="_blank" rel="noreferrer" role="menuitem">Facebook <ArrowUpRight size={13} /></a><a href={BOT_URL} target="_blank" rel="noreferrer" role="menuitem">@SitepackStudiobot <ArrowUpRight size={13} /></a><button type="button" role="menuitem" onClick={() => { void installApp(); setCreatorMenuOpen(false); }}>Install app <ArrowDownToLine size={13} /></button></div> : null}</div></div>
       </header>
 
-      <section className="hero-section">
+      <section className="hero-section" style={{ "--hero-image": `url(${ASSET_URLS.hero})` } as React.CSSProperties}>
         <div className="index-mark mark-one">01</div>
-        <HeroArtwork />
         <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-dot" /> PUBLIC SITE ARCHIVER</p><h1>Pack a website.<br /><em>Keep the files.</em></h1><p className="hero-intro">Download public HTML, stylesheets, scripts, images, fonts, and linked frontend assets into a tidy offline ZIP.</p></div>
         <div className="hero-aside"><div className="hero-note"><span className="note-number">A.</span><span>For permitted public pages,<br />not private access.</span></div><div className="hero-stamp"><Sparkles size={15} /> SERVER POWERED</div></div>
       </section>
@@ -186,7 +179,7 @@ export default function Home() {
         {jobState === "ready" && result ? <div className="ready-card" aria-live="polite"><div className="ready-icon"><PackageCheck size={22} /></div><div className="ready-copy"><p className="section-kicker">ARCHIVE READY / {hostname.toUpperCase()}</p><h3>{result.fileCount} files, packed for offline use.</h3><p>{result.pageCount} HTML page{result.pageCount === 1 ? "" : "s"}, {result.assetCount} discovered public file{result.assetCount === 1 ? "" : "s"}, and {result.skippedCount} unavailable reference{result.skippedCount === 1 ? "" : "s"} recorded in the manifest. The package includes a clear backend-source availability note.</p></div><div className="ready-actions"><a href={result.downloadUrl} download={result.archiveName} className="download-button"><ArrowDownToLine size={18} /> Download ZIP</a><button type="button" className="text-button" onClick={resetJob}>Pack another <MoveRight size={15} /></button></div></div> : null}
       </section>
 
-      <section className="explain-section"><div className="index-mark mark-three">03</div><div className="explain-grid"><div className="explain-copy"><p className="section-kicker">WHAT GOES IN THE BOX</p><h2>All the useful<br /><em>pieces.</em></h2><p>SitePack follows public static references from a page, including stylesheets, module imports, import maps, fonts, images, media, social images, and manifest files. Each ZIP includes a source index with captured public URLs, local paths, types, and sizes. A public address cannot reveal private backend code, databases, API secrets, logins, paywalled content, or CAPTCHA-protected pages.</p><a className="inline-link" href="#pack">Start with a URL <ArrowUpRight size={16} /></a></div><div className="stamp-image-wrap"><SourceArtwork /><div className="image-caption">THE SMALL PARTS<br />THAT MAKE A PAGE.</div></div></div><div className="file-type-row">{fileTypes.map((file) => <div className={`file-type file-type-${file.tone}`} key={file.label}><span className="file-index">{file.value}</span><span className="file-icon"><FileArchive size={20} /></span><div><strong>{file.label}</strong><small>{file.detail}</small></div></div>)}</div></section>
+      <section className="explain-section"><div className="index-mark mark-three">03</div><div className="explain-grid"><div className="explain-copy"><p className="section-kicker">WHAT GOES IN THE BOX</p><h2>All the useful<br /><em>pieces.</em></h2><p>SitePack follows public static references from a page, including stylesheets, module imports, import maps, fonts, images, media, social images, and manifest files. Each ZIP includes a source index with captured public URLs, local paths, types, and sizes. A public address cannot reveal private backend code, databases, API secrets, logins, paywalled content, or CAPTCHA-protected pages.</p><a className="inline-link" href="#pack">Start with a URL <ArrowUpRight size={16} /></a></div><div className="stamp-image-wrap"><img src={ASSET_URLS.stamps} alt="Editorial illustration of web file types" /><div className="image-caption">THE SMALL PARTS<br />THAT MAKE A PAGE.</div></div></div><div className="file-type-row">{fileTypes.map((file) => <div className={`file-type file-type-${file.tone}`} key={file.label}><span className="file-index">{file.value}</span><span className="file-icon"><FileArchive size={20} /></span><div><strong>{file.label}</strong><small>{file.detail}</small></div></div>)}</div></section>
 
       <footer className="footer"><div className="footer-brand"><BrandMark /><span className="footer-rule" /> <span>Small tool. Clear output.</span></div><div className="footer-links"><a href="#pack">Pack a page</a><button type="button" className="footer-install" onClick={() => void installApp()}>Install app <ArrowDownToLine size={13} /></button><a href="https://www.facebook.com/SitepackStudio" target="_blank" rel="noreferrer">Creator Facebook <ArrowUpRight size={13} /></a><a href={BOT_URL} target="_blank" rel="noreferrer">@SitepackStudiobot <ArrowUpRight size={13} /></a><span>© 2026 SitePack Studio</span></div></footer>
     </main>
