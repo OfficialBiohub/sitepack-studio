@@ -12,3 +12,10 @@
 - [x] Validate the standard preview URL without cache-busting query parameters.
 - [x] Confirmed that the standard preview URL renders the live homepage after the cache reset, despite a stale restart capture showing the prior error panel.
 - [x] Save a checkpoint with the persistent preview-error repair.
+- [x] Identify the actual active entry module serving the recurring TooltipProvider failure.
+- [x] Remove unused legacy tooltip and sidebar modules from the active client source tree.
+- [x] Confirm the active client source and direct dependency tree contain no Radix TooltipProvider runtime.
+- [x] Validate the normal preview URL and WebSocket connection after a full clean restart.
+- [x] Confirmed the normal preview URL renders after tooltip removal and its browser console is empty.
+- [x] Audited the generated production assets and confirmed they contain no TooltipProvider or Radix tooltip runtime.
+- [x] Save a checkpoint with the definitive TooltipProvider removal.
