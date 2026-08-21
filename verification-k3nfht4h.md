@@ -13,3 +13,5 @@ The final automated suite completed with 17 passing tests, the TypeScript check 
 Direct Chromium captures at 375 × 812 pixels confirm the Home and Creator Contact routes render successfully at phone width. The Home page retains its legible large headline and archive prompt, while Creator Contact switches cleanly to the compact logo, language control, menu button, and vertically paced contact layout.
 
 The remaining direct Chromium captures at 375 × 812 pixels confirm How It Works and Archive & History also render correctly on mobile. Both preserve their page markers, readable editorial headings, supporting copy, and single-column content flow. All four requested routes have now been verified directly on desktop and mobile viewports.
+
+The homepage hero repair was directly rechecked at 1280 × 900 and 375 × 812 pixels. The desktop version retains the original copied-site composition: paper headline panel on the left and yellow archive artwork on the right. On mobile, the headline and description now occupy a clean paper block above a separate artwork panel, eliminating the previous overlap.

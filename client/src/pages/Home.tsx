@@ -142,6 +142,7 @@ export default function Home() {
         <div className="index-mark mark-one">01</div>
         <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-dot" /> PUBLIC SITE ARCHIVER</p><h1>Pack a website.<br /><em>Keep the files.</em></h1><p className="hero-intro">Download public HTML, stylesheets, scripts, images, fonts, and linked frontend assets into a tidy offline ZIP.</p></div>
         <div className="hero-aside"><div className="hero-note"><span className="note-number">A.</span><span>For permitted public pages,<br />not private access.</span></div><div className="hero-stamp"><Sparkles size={15} /> SERVER POWERED</div></div>
+        <div className="hero-art" aria-hidden="true" />
       </section>
 
       <section className="workspace-section" id="pack">

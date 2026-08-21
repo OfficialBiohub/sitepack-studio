@@ -8,3 +8,6 @@
 - [x] Verify the rendered pages on desktop and mobile viewports.
 - [x] Diagnose and correct the blank-page rendering issue seen during desktop route verification.
 - [x] Create a published checkpoint for the completed website update.
+- [x] Inspect and repair the flagged homepage hero section to match the established copied-site composition.
+- [x] Verify the repaired homepage hero at desktop and mobile widths.
+- [ ] Publish a checkpoint for the homepage hero repair.
