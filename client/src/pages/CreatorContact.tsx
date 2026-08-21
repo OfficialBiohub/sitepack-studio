@@ -1,27 +1,47 @@
-import { ArrowUpRight, MessageCircle, Send, Sparkles } from "lucide-react";
-import { EXTERNAL_LINKS, SitePage } from "@/components/SiteChrome";
+import { ArrowUpRight, MessageCircle, ShieldCheck } from "lucide-react";
+import type { CSSProperties } from "react";
+import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
+
+const contacts = [
+  { label: "Facebook", detail: "SitePack Studio", href: "https://www.facebook.com/SitepackStudio", icon: MessageCircle },
+  { label: "Telegram", detail: "@SitepackStudiobot", href: "https://t.me/SitepackStudiobot", icon: MessageCircle },
+];
 
 export default function CreatorContact() {
   return (
-    <SitePage>
-      <section className="subpage-hero contact-hero">
-        <div className="index-mark page-mark">03</div>
+    <main className="site-shell info-page" style={{ "--paper-image": `url(${PAPER_TEXTURE_URL})` } as CSSProperties}>
+      <SiteChrome />
+      <section className="page-intro page-intro-clay">
+        <div className="index-mark page-index-mark">04</div>
         <div>
-          <p className="section-kicker">OPEN LINE / 003</p>
-          <h1 className="subpage-title">Creator<br /><em>contact.</em></h1>
+          <p className="eyebrow"><span className="eyebrow-dot" /> CREATOR CONTACT</p>
+          <h1>Start a<br /><em>conversation.</em></h1>
         </div>
-        <p className="subpage-intro">Have a question, an idea for the tool, or need a direct line to the person behind SitePack Studio? Choose the channel that fits.</p>
+        <p className="page-intro-copy">Use the official creator channels for questions, feedback, and notes about SitePack Studio.</p>
       </section>
 
       <section className="contact-section">
-        <div className="contact-intro"><p className="section-kicker">SAY HELLO</p><h2>Small tools grow<br />through <em>clear notes.</em></h2><p>Use the official channels below for project feedback, questions about the workflow, or messages for the SitePack Studio creator.</p></div>
-        <div className="contact-cards">
-          <a className="contact-card contact-card-yellow" href={EXTERNAL_LINKS.telegram} target="_blank" rel="noreferrer"><span className="contact-card-icon"><Send size={25} /></span><span className="contact-card-label">TELEGRAM</span><h3>@SitepackStudiobot</h3><p>Message the SitePack Studio bot directly.</p><span className="contact-card-link">Open Telegram <ArrowUpRight size={17} /></span></a>
-          <a className="contact-card contact-card-paper" href={EXTERNAL_LINKS.facebook} target="_blank" rel="noreferrer"><span className="contact-card-icon"><MessageCircle size={25} /></span><span className="contact-card-label">FACEBOOK</span><h3>SitePack Studio</h3><p>Follow updates and send a message through the official page.</p><span className="contact-card-link">Open Facebook <ArrowUpRight size={17} /></span></a>
+        <div className="contact-heading"><p className="section-kicker">OFFICIAL CHANNELS</p><h2>Send a note.<br /><em>Keep it direct.</em></h2></div>
+        <div className="contact-grid">
+          {contacts.map((contact) => {
+            const Icon = contact.icon;
+            return (
+              <a className="contact-card" href={contact.href} target="_blank" rel="noreferrer" key={contact.label}>
+                <span className="contact-icon"><Icon size={22} /></span>
+                <div><span className="contact-label">{contact.label}</span><strong>{contact.detail}</strong></div>
+                <ArrowUpRight size={19} />
+              </a>
+            );
+          })}
         </div>
       </section>
 
-      <section className="contact-note"><Sparkles size={19} /><p><strong>Helpful detail:</strong> include the public page address and a short description of what happened when you write. It makes a useful reply easier.</p></section>
-    </SitePage>
+      <section className="contact-note-section">
+        <ShieldCheck size={25} />
+        <div><p className="section-kicker">A QUICK REMINDER</p><p>SitePack is for pages you are entitled to archive. The creator can help with the tool, but cannot grant permission for another person’s website or protected material.</p></div>
+        <a href="/#pack" className="page-action">Back to the packer <ArrowUpRight size={17} /></a>
+      </section>
+      <SiteFooter />
+    </main>
   );
 }

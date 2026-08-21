@@ -1,36 +1,66 @@
-import { ArrowDownToLine, CheckCircle2, FileArchive, Globe2, PackageCheck } from "lucide-react";
-import { Link } from "wouter";
-import { SitePage } from "@/components/SiteChrome";
+import { ArrowDown, ArrowUpRight, FileArchive, Globe2, SlidersHorizontal } from "lucide-react";
+import type { CSSProperties } from "react";
+import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
 
 const steps = [
-  { number: "01", icon: Globe2, title: "Share a public URL", copy: "Paste the address of a website you are allowed to archive. SitePack works with public, browser-accessible frontend files." },
-  { number: "02", icon: FileArchive, title: "Choose the package shape", copy: "Select whether to rename assets, follow same-origin pages, include public source maps, or preserve the source structure." },
-  { number: "03", icon: PackageCheck, title: "Download the ZIP", copy: "SitePack collects public frontend references, rebuilds local paths, and prepares an offline-ready archive with a source index." },
+  {
+    number: "01",
+    icon: Globe2,
+    title: "Provide a public URL.",
+    copy: "Start with a page that is publicly reachable. You confirm that you have permission to archive its visible frontend files before SitePack begins.",
+  },
+  {
+    number: "02",
+    icon: SlidersHorizontal,
+    title: "Choose the shape of the pack.",
+    copy: "Keep the original folder structure, rename assets, include linked same-origin pages, or retain public source maps when you need them.",
+  },
+  {
+    number: "03",
+    icon: FileArchive,
+    title: "Download the local record.",
+    copy: "SitePack retrieves reachable frontend files, rewrites local references, and returns a ZIP prepared for offline inspection.",
+  },
 ];
 
 export default function HowItWorks() {
   return (
-    <SitePage>
-      <section className="subpage-hero">
-        <div className="index-mark page-mark">01</div>
+    <main className="site-shell info-page" style={{ "--paper-image": `url(${PAPER_TEXTURE_URL})` } as CSSProperties}>
+      <SiteChrome />
+      <section className="page-intro page-intro-yellow">
+        <div className="index-mark page-index-mark">02</div>
         <div>
-          <p className="section-kicker">FIELD GUIDE / 001</p>
-          <h1 className="subpage-title">How the <em>pack</em><br />comes together.</h1>
+          <p className="eyebrow"><span className="eyebrow-dot" /> THE ARCHIVE WORKFLOW</p>
+          <h1>Three steps.<br /><em>One local copy.</em></h1>
         </div>
-        <p className="subpage-intro">A deliberate three-step workflow for keeping a permitted public website’s visible frontend files close at hand.</p>
+        <p className="page-intro-copy">A clear path from a permitted public address to a portable set of frontend files — without asking you to use a command line.</p>
       </section>
 
-      <section className="process-section" aria-label="SitePack workflow">
-        <div className="process-heading"><p className="section-kicker">THE ROUTE FROM URL TO ZIP</p><p>Nothing hidden, nothing inferred. You choose the source, the scope, and the archive shape.</p></div>
-        <div className="process-flow">
-          {steps.map(({ number, icon: Icon, title, copy }) => <article className="process-step" key={number}><span className="step-number">{number}</span><span className="step-icon"><Icon size={23} /></span><h2>{title}</h2><p>{copy}</p></article>)}
+      <section className="process-section">
+        <div className="process-rail" aria-hidden="true"><span>BEGIN</span><ArrowDown size={16} /><span>ZIP</span></div>
+        <div className="process-steps">
+          {steps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <article className="process-step" key={step.number}>
+                <div className="step-topline"><span>{step.number}</span><Icon size={22} /></div>
+                <h2>{step.title}</h2>
+                <p>{step.copy}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      <section className="rules-section">
-        <div><p className="section-kicker">A CLEAR BOUNDARY</p><h2>Public pages only.<br /><em>Permission first.</em></h2></div>
-        <div className="rules-copy"><p>SitePack is designed for visible public frontend resources: HTML, stylesheets, client-side scripts, images, fonts, media, manifests, and linked static files. It does not reveal private backend code, databases, account areas, API secrets, paywalled material, or CAPTCHA-protected pages.</p><div className="rule-check"><CheckCircle2 size={18} /><span>Confirm you have permission before creating an archive.</span></div><Link href="/#pack" className="black-action">Start a permitted archive <ArrowDownToLine size={17} /></Link></div>
+      <section className="page-note-section">
+        <p className="section-kicker">A USEFUL BOUNDARY</p>
+        <div className="page-note-grid">
+          <h2>Public files are not<br /><em>the whole website.</em></h2>
+          <p>A public address can reveal the browser-facing part of a page. It cannot provide private backend code, databases, API secrets, accounts, paywalled material, or protected content. The resulting ZIP keeps that distinction visible.</p>
+        </div>
+        <a href="/#pack" className="page-action">Start a permitted archive <ArrowUpRight size={17} /></a>
       </section>
-    </SitePage>
+      <SiteFooter />
+    </main>
   );
 }

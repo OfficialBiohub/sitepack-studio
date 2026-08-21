@@ -3,9 +3,7 @@ import {
   ArrowDownToLine,
   ArrowUpRight,
   Check,
-  ChevronDown,
   CircleAlert,
-  CircleCheck,
   FileArchive,
   Globe2,
   LoaderCircle,
@@ -15,10 +13,10 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { toast } from "sonner";
-import { SitePage } from "@/components/SiteChrome";
 import { trpc } from "@/lib/trpc";
+import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
 
 type JobState = "idle" | "preparing" | "ready" | "error";
 
@@ -136,9 +134,10 @@ export default function Home() {
   function resetJob() { setResult(null); setJobState("idle"); setErrorMessage(""); }
 
   return (
-    <SitePage onInstall={installApp}>
+    <main className="site-shell" style={{ "--paper-image": `url(${PAPER_TEXTURE_URL})` } as CSSProperties}>
+      <SiteChrome />
 
-      <section className="hero-section" style={{ "--hero-image": `url(${ASSET_URLS.hero})` } as React.CSSProperties}>
+      <section className="hero-section" style={{ "--hero-image": `url(${ASSET_URLS.hero})` } as CSSProperties}>
         <div className="index-mark mark-one">01</div>
         <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-dot" /> PUBLIC SITE ARCHIVER</p><h1>Pack a website.<br /><em>Keep the files.</em></h1><p className="hero-intro">Download public HTML, stylesheets, scripts, images, fonts, and linked frontend assets into a tidy offline ZIP.</p></div>
         <div className="hero-aside"><div className="hero-note"><span className="note-number">A.</span><span>For permitted public pages,<br />not private access.</span></div><div className="hero-stamp"><Sparkles size={15} /> SERVER POWERED</div></div>
@@ -162,6 +161,7 @@ export default function Home() {
 
       <section className="explain-section"><div className="index-mark mark-three">03</div><div className="explain-grid"><div className="explain-copy"><p className="section-kicker">WHAT GOES IN THE BOX</p><h2>All the useful<br /><em>pieces.</em></h2><p>SitePack follows public static references from a page, including stylesheets, module imports, import maps, fonts, images, media, social images, and manifest files. Each ZIP includes a source index with captured public URLs, local paths, types, and sizes. A public address cannot reveal private backend code, databases, API secrets, logins, paywalled content, or CAPTCHA-protected pages.</p><a className="inline-link" href="#pack">Start with a URL <ArrowUpRight size={16} /></a></div><div className="stamp-image-wrap"><img src={ASSET_URLS.stamps} alt="Editorial illustration of web file types" /><div className="image-caption">THE SMALL PARTS<br />THAT MAKE A PAGE.</div></div></div><div className="file-type-row">{fileTypes.map((file) => <div className={`file-type file-type-${file.tone}`} key={file.label}><span className="file-index">{file.value}</span><span className="file-icon"><FileArchive size={20} /></span><div><strong>{file.label}</strong><small>{file.detail}</small></div></div>)}</div></section>
 
-    </SitePage>
+      <SiteFooter onInstall={() => void installApp()} />
+    </main>
   );
 }

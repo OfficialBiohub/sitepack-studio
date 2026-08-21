@@ -1,35 +1,43 @@
-import { ArrowUpRight, ClipboardList, FileText, FolderArchive, ShieldCheck } from "lucide-react";
-import { Link } from "wouter";
-import { SitePage } from "@/components/SiteChrome";
+import { ArrowUpRight, FileCode2, FileImage, FileText, ShieldAlert } from "lucide-react";
+import type { CSSProperties } from "react";
+import { PAPER_TEXTURE_URL, SiteChrome, SiteFooter } from "@/components/SiteChrome";
 
-const archiveNotes = [
-  { label: "Public source list", copy: "A source index records captured public URLs, local paths, file types, and sizes for the current package.", icon: ClipboardList },
-  { label: "Offline package", copy: "Visible frontend references are rewritten for local use where possible, then delivered together as a ZIP.", icon: FolderArchive },
-  { label: "Clear limits", copy: "The archive records what a public page exposed; it cannot supply private systems or content behind access controls.", icon: ShieldCheck },
+const recordItems = [
+  { number: "01", icon: FileCode2, title: "Page structure", copy: "Captured public HTML and the local relationships needed to inspect it offline." },
+  { number: "02", icon: FileText, title: "Visible rules", copy: "Reachable stylesheets, scripts, fonts, and manifest references discovered from the public page." },
+  { number: "03", icon: FileImage, title: "Linked media", copy: "Public images and media that are reachable from the selected page, with a clear local path." },
 ];
 
 export default function ArchiveHistory() {
   return (
-    <SitePage>
-      <section className="subpage-hero archive-hero">
-        <div className="index-mark page-mark">02</div>
+    <main className="site-shell info-page" style={{ "--paper-image": `url(${PAPER_TEXTURE_URL})` } as CSSProperties}>
+      <SiteChrome />
+      <section className="page-intro page-intro-paper">
+        <div className="index-mark page-index-mark">03</div>
         <div>
-          <p className="section-kicker">THE ARCHIVE DESK / 002</p>
-          <h1 className="subpage-title">Archive &<br /><em>history.</em></h1>
+          <p className="eyebrow"><span className="eyebrow-dot" /> THE LOCAL RECORD</p>
+          <h1>Archive the page.<br /><em>Keep its context.</em></h1>
         </div>
-        <p className="subpage-intro">Understand what arrives in each package, what remains outside its reach, and how to retain an accountable record of your own archive work.</p>
+        <p className="page-intro-copy">A useful archive is more than a download. It is a readable record of which public files were gathered, where they were placed, and what stayed unavailable.</p>
       </section>
 
       <section className="archive-ledger-section">
-        <div className="ledger-intro"><p className="section-kicker">WHAT THE PACKAGE REMEMBERS</p><h2>One zip.<br /><em>A clear trail.</em></h2><p>Each completed package includes a source index, making it easier to see the public resources collected for that archive. Keep the ZIP and its index together when you need a durable record.</p></div>
-        <div className="archive-ledger">
-          <div className="ledger-topline"><span>ARCHIVE NOTES</span><span>PUBLIC FRONTEND ONLY</span></div>
-          {archiveNotes.map(({ label, copy, icon: Icon }, index) => <article className="ledger-entry" key={label}><span>{String(index + 1).padStart(2, "0")}</span><Icon size={22} /><div><h3>{label}</h3><p>{copy}</p></div></article>)}
-          <div className="ledger-footnote"><FileText size={17} /><span>SitePack does not keep a public archive catalogue or claim ownership of the material you package. Store and use each archive responsibly.</span></div>
+        <div className="ledger-heading"><p className="section-kicker">INSIDE THE PACKAGE</p><h2>A page, filed<br /><em>with care.</em></h2></div>
+        <div className="record-grid">
+          {recordItems.map((item) => {
+            const Icon = item.icon;
+            return <article className="record-card" key={item.number}><span className="record-number">{item.number}</span><Icon size={25} /><h3>{item.title}</h3><p>{item.copy}</p></article>;
+          })}
         </div>
       </section>
 
-      <section className="history-callout"><div><p className="section-kicker">KEEP YOUR OWN LOG</p><h2>A simple habit for<br /><em>responsible archiving.</em></h2></div><div><p>For work that needs traceability, note the source URL, date, purpose, permission basis, and the archive file name beside your downloaded package. Your own record stays with your project rather than becoming a public list.</p><Link href="/#pack" className="outline-action">Make an archive <ArrowUpRight size={17} /></Link></div></section>
-    </SitePage>
+      <section className="archive-boundary-section">
+        <div className="boundary-stamp"><ShieldAlert size={19} /> FRONTEND ONLY</div>
+        <div><p className="section-kicker">WHAT HISTORY MEANS HERE</p><h2>A source index<br /><em>draws the line.</em></h2></div>
+        <p>Each archive includes a source index that records captured public URLs, local paths, types, and sizes. When a reference cannot be retrieved, it stays out of the ZIP rather than pretending to be part of the record.</p>
+        <a href="/#pack" className="page-action">Create a local record <ArrowUpRight size={17} /></a>
+      </section>
+      <SiteFooter />
+    </main>
   );
 }
