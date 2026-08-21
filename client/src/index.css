@@ -99,6 +99,7 @@
   h1, h2, h3, p { margin-top: 0; }
   h1 { margin-bottom: 38px; font-size: clamp(64px, 9.2vw, 112px); line-height: .88; font-weight: 700; letter-spacing: -.09em; text-transform: uppercase; max-width: 470px; }
   h1 em, h2 em { font-family: "IBM Plex Serif", serif; font-weight: 400; letter-spacing: -.07em; text-transform: none; }
+  h1 em { white-space: nowrap; }
   .hero-intro { max-width: 560px; font-family: "IBM Plex Serif", serif; font-style: italic; font-size: 25px; line-height: 1.38; }
   .hero-aside { display: none; }
   .hero-note { display: flex; gap: 13px; border-top: 1px solid var(--ink); padding-top: 12px; font-size: 12px; line-height: 1.35; }
@@ -199,6 +200,7 @@
     .edition-label { display: none; }
     .topbar-meta { gap: 17px; }
     .hero-section { min-height: 610px; display: block; padding-top: 93px; background-position: 61% center; }
+    h1 em { white-space: normal; }
     .hero-section::before { content: ""; position: absolute; inset: 0; background: rgba(248,246,238,.45); }
     .mark-one { top: 40px; left: 72%; }
     .hero-stamp { margin-top: 30px; }

@@ -9,3 +9,4 @@
 - [x] Confirm automated tests and the production build succeed for the homepage revision.
 - [x] Document 1079×1528 visual QA: two-line uppercase headline with serif subline, right-aligned browser/archive artwork, enlarged header mark, and expanded yellow workspace match the reference composition; the accepted variance is the exact crop of the supplied illustration asset at the viewport edge.
 - [x] Save a checkpoint for the reference-matched homepage revision.
+- [x] Keep the hero serif tagline on one line at the standard desktop preview width.
