@@ -21,3 +21,6 @@
 - [x] Label categories as HTML, CSS, JavaScript, media/images, fonts, and other assets.
 - [x] Verify responsive display of the six-category row and save a checkpoint.
 - [x] Confirmed after merge that desktop shows six categories and mobile presents three readable two-card rows.
+- [x] Restored the project to user-requested checkpoint 6ad32a5b.
+- [x] Restored the missing dotenv runtime dependency required by the historical server build.
+- [x] Verified the restored homepage and browser console state.
