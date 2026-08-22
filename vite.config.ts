@@ -155,6 +155,7 @@ const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(
 export default defineConfig({
   plugins,
   resolve: {
+    dedupe: ["react", "react-dom"],
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
@@ -164,12 +165,23 @@ export default defineConfig({
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
   publicDir: path.resolve(import.meta.dirname, "client", "public"),
+  optimizeDeps: {
+    // Keep tRPC's hook provider on the same React dispatcher as React DOM.
+    // Excluding it from Vite's persistent prebundle avoids a stale secondary
+    // React copy after a project rollback or lockfile change.
+    exclude: ["@trpc/react-query", "@tanstack/react-query"],
+  },
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
   server: {
     host: true,
+    hmr: {
+      protocol: "wss",
+      clientPort: 443,
+      timeout: 30_000,
+    },
     allowedHosts: [
       ".manuspre.computer",
       ".manus.computer",

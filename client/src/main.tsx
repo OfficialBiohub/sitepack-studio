@@ -8,7 +8,15 @@ import App from "./App";
 import { startLogin } from "./const";
 import "./index.css";
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && import.meta.env.DEV) {
+  // Development previews must never be held on a previous Vite client bundle.
+  // Rollbacks and dependency changes otherwise leave a service worker serving
+  // an obsolete tRPC/React module graph.
+  void navigator.serviceWorker.getRegistrations().then((registrations) =>
+    Promise.all(registrations.map((registration) => registration.unregister())),
+  );
+  void caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))));
+} else if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     void navigator.serviceWorker.register("/service-worker.js").catch((error) => {
       console.warn("[PWA] Service worker registration failed", error);

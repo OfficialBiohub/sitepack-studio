@@ -24,3 +24,9 @@
 - [x] Restored the project to user-requested checkpoint 6ad32a5b.
 - [x] Restored the missing dotenv runtime dependency required by the historical server build.
 - [x] Verified the restored homepage and browser console state.
+- [x] Inspect the restored React, React DOM, tRPC, and Vite dependency resolution.
+- [x] Configure Vite to use one shared React runtime for React DOM and tRPC.
+- [x] Clear stale optimized dependency artifacts and restart the preview.
+- [x] Validate the normal preview URL and browser console for the tRPC provider.
+- [x] Confirmed the standard preview URL renders the tRPC-enabled interface with an empty browser console.
+- [x] Save a checkpoint with the restored tRPC runtime repair.
