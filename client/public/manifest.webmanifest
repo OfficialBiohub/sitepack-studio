@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "SitePack Studio",
+  "short_name": "SitePack",
+  "description": "Package authorized public website files into an offline ZIP.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f6ee",
+  "theme_color": "#f6e84a",
+  "icons": [
+    {
+      "src": "/sitepack-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

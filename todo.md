@@ -1,21 +1,23 @@
-# Project TODO
+# SitePack Studio crawler upgrade
 
-- [x] Reproduce the restored preview’s invalid-hook and TooltipProvider runtime error.
-- [x] Remove the React runtime/provider incompatibility while preserving the restored interface.
-- [x] Clear stale development bundles and ensure the Vite client reconnects normally.
-- [x] Verify typecheck, production build, preview rendering, and browser console state.
-- [x] Save a checkpoint containing the preview reliability fix.
-- [x] Confirmed a fresh preview load renders the restored homepage without the TooltipProvider hook failure.
-- [x] Identify every remaining client import path that can mount TooltipProvider.
-- [x] Ensure the development server does not serve stale optimized React or Radix modules.
-- [x] Configure reliable Vite HMR behavior through the managed preview proxy.
-- [x] Validate the standard preview URL without cache-busting query parameters.
-- [x] Confirmed that the standard preview URL renders the live homepage after the cache reset, despite a stale restart capture showing the prior error panel.
-- [x] Save a checkpoint with the persistent preview-error repair.
-- [x] Identify the actual active entry module serving the recurring TooltipProvider failure.
-- [x] Remove unused legacy tooltip and sidebar modules from the active client source tree.
-- [x] Confirm the active client source and direct dependency tree contain no Radix TooltipProvider runtime.
-- [x] Validate the normal preview URL and WebSocket connection after a full clean restart.
-- [x] Confirmed the normal preview URL renders after tooltip removal and its browser console is empty.
-- [x] Audited the generated production assets and confirmed they contain no TooltipProvider or Radix tooltip runtime.
-- [x] Save a checkpoint with the definitive TooltipProvider removal.
+- [x] Read the full-stack and automation guidance before changing architecture.
+- [x] Upgrade the project to a server-backed full-stack setup.
+- [x] Define crawl limits, same-origin behavior, timeout handling, and blocked/private-site errors.
+- [x] Implement a crawl endpoint that fetches public HTML and discovers linked assets.
+- [x] Download CSS, JavaScript, images, fonts, media, icons, and source maps where publicly accessible.
+- [x] Rewrite relative and absolute asset references to local ZIP paths.
+- [x] Package the reconstructed site and manifest into a ZIP response.
+- [x] Connect the frontend progress and download states to the crawl endpoint.
+- [x] Validate successful packaging and representative error states.
+- [x] Document limitations: authentication, bot protection, robots policies, dynamic runtime data, and legal permissions.
+- [x] Add explicit user-facing wording that robots-policy restrictions can block an archive.
+- [x] Save a delivery checkpoint and provide the project version.
+- [x] Reproduce the false private-network error reported for a valid public URL.
+- [x] Correct IPv4 and IPv6 public-address classification without permitting private or reserved targets.
+- [x] Add regression coverage for public host DNS resolution and blocked private addresses.
+- [x] Validate the archive mutation succeeds for a public URL and rejects a private target.
+- [x] Save a checkpoint containing the validation fix.
+- [x] Replace the four asset cards with the requested six archive categories.
+- [x] Label categories as HTML, CSS, JavaScript, media/images, fonts, and other assets.
+- [x] Verify responsive display of the six-category row and save a checkpoint.
+- [x] Confirmed after merge that desktop shows six categories and mobile presents three readable two-card rows.
